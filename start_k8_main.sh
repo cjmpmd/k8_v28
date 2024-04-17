@@ -46,7 +46,8 @@ sudo tar zxvf critest-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
 rm -f critest-$VERSION-linux-amd64.tar.gz
 
 sudo  apt-get -y install socat
-sudo swapoff -a
+sudo swapoff -a  
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
 
 systemctl list-units --type=swap --state=active
 
@@ -68,12 +69,11 @@ prompt_type() {
         [Mm]|[Mm])
             echo "This is a Master."
             echo ""
-            echo "sudo pkill kubelet"
-            echo "sudo kubeadm init --control-plane-endpoint=master-node --upload-certs"
-
+            sudo kubeadm config images pull
+            #echo "sudo pkill kubelet"
+            echo " sudo kubeadm init --control-plane-endpoint=master-node --upload-certs --ignore-preflight-errors=all"
             ;;
         [Ww]|[Ww])
-
             echo "This is a Worker."
             echo "The changes will be applied in the next system reboot."
             echo "Some configuration conflicts may arise until the system is rebooted."
