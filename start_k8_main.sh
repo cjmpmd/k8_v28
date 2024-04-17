@@ -1,3 +1,36 @@
+
+
+
+# Function to prompt user for system rebootconfirmation
+prompt_type() {
+    read -p "Is this a Master or Worker node? (m/w)" answer
+    case "$answer" in
+        [Mm]|[Mm])
+            echo "This is a Master."
+            echo ""
+            sudo mkdir -p $HOME/.kube
+            
+            sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+            sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+            sudo kubeadm config images pull
+            #echo "sudo pkill kubelet"
+            echo " sudo kubeadm init --control-plane-endpoint=master-node --upload-certs --ignore-preflight-errors=all"
+            ;;
+        [Ww]|[Ww])
+            echo "This is a Worker."
+            echo "The changes will be applied in the next system reboot."
+            echo "Some configuration conflicts may arise until the system is rebooted."
+            ;;
+        *)
+            echo "Invalid response. Please enter 'yes' or 'no'."
+            prompt_type  # Prompt again recursively
+            ;;
+    esac
+}
+
+
+
 prompt_type
 
 sudo apt update -y
@@ -61,36 +94,6 @@ sudo systemctl restart kubelet
 
 sudo kubeadm config images pull
 sudo apt update -y
-
-
-
-# Function to prompt user for system rebootconfirmation
-prompt_type() {
-    read -p "Is this a Master or Worker node? (m/w)" answer
-    case "$answer" in
-        [Mm]|[Mm])
-            echo "This is a Master."
-            echo ""
-            sudo mkdir -p $HOME/.kube
-            
-            sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-            sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-            sudo kubeadm config images pull
-            #echo "sudo pkill kubelet"
-            echo " sudo kubeadm init --control-plane-endpoint=master-node --upload-certs --ignore-preflight-errors=all"
-            ;;
-        [Ww]|[Ww])
-            echo "This is a Worker."
-            echo "The changes will be applied in the next system reboot."
-            echo "Some configuration conflicts may arise until the system is rebooted."
-            ;;
-        *)
-            echo "Invalid response. Please enter 'yes' or 'no'."
-            prompt_type  # Prompt again recursively
-            ;;
-    esac
-}
 
 # Prompt user for reboot confirmation
 # prompt_type
