@@ -2,6 +2,11 @@
 #git clone https://github.com/cjmpmd/k8_v28.git
 
 
+sudo rm -rf .kube / 
+sudo rm -rf /minikube / 
+sudo rm -rf /etc/kubernetes
+
+
 sudo rm $HOME/.kube/config file
 sudo rm -R ~/.kube/
 sudo rm /etc/kubernetes/manifests/kube-apiserver.yaml
