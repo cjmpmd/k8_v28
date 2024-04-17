@@ -14,6 +14,8 @@ prompt_type() {
             
             sudo kubeadm config images pull
             #echo "sudo pkill kubelet"
+            $ sudo kubeadm init --control-plane-endpoint=k8smaster.example.net
+
             echo " sudo kubeadm init --control-plane-endpoint=master-node --upload-certs --ignore-preflight-errors=all"
             ;;
         [Ww]|[Ww])
@@ -44,6 +46,8 @@ echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.
 
 sudo apt update -y
 sudo apt install -y kubeadm=1.28.1-1.1 kubelet=1.28.1-1.1 kubectl=1.28.1-1.1
+
+sudo apt-mark hold kubelet kubeadm kubectl
 
 kubeadm version
 
@@ -84,11 +88,15 @@ sudo sed -i '/ swap / s/^/#/' /etc/fstab
 
 sudo systemctl list-units --type=swap --state=active
 
-sudo systemctl enable kublet
+sudo systemctl enable kubelet
 
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 sudo systemctl restart kubelet
+
+
+# sudo apt-get install -y kubelet kubeadm kubectl
+# sudo apt-mark hold kubelet kubeadm kubectl
 
 sudo kubeadm config images pull
 sudo apt update -y
