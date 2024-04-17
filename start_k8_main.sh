@@ -1,6 +1,4 @@
 
-
-
 # Function to prompt user for system rebootconfirmation
 prompt_type() {
     read -p "Is this a Master or Worker node? (m/w)" answer
@@ -9,10 +7,11 @@ prompt_type() {
             echo "This is a Master."
             echo ""
             sudo mkdir -p $HOME/.kube
-            
+            sudo $HOME/.kube/config
+            sudo touch /etc/kubernetes/admin.conf
             sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
             sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
+            
             sudo kubeadm config images pull
             #echo "sudo pkill kubelet"
             echo " sudo kubeadm init --control-plane-endpoint=master-node --upload-certs --ignore-preflight-errors=all"
@@ -29,9 +28,6 @@ prompt_type() {
     esac
 }
 
-
-
-prompt_type
 
 sudo apt update -y
 $ sudo apt install net-tools -y
@@ -94,9 +90,13 @@ sudo systemctl restart kubelet
 
 sudo kubeadm config images pull
 sudo apt update -y
+sudo apt upgrade -y
+sudo apt update -y
+
+
 
 # Prompt user for reboot confirmation
-# prompt_type
+prompt_type
 
 
 
