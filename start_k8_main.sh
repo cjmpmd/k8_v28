@@ -63,9 +63,9 @@ net.ipv4.ip_forward = 1
 EOT
 
 
-sudo hostnamectl set-hostname master-node
+# sudo hostnamectl set-hostname master-node
 sudo hostnamectl set-hostname "k8smaster.example.net"
-exec bash
+# exec bash
 sudo sysctl --system
 
 VERSION="v1.28.0"
