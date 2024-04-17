@@ -57,7 +57,7 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 sudo systemctl restart kubelet
 
-
+sudo kubeadm config images pull
 sudo apt update -y
 
 
