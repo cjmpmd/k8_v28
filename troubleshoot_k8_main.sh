@@ -1,7 +1,7 @@
 #git clone https://github.com/cjmpmd/k8_v28.git
 
 
-sudo $HOME/.kube/config file
+sudo rm $HOME/.kube/config file
 sudo rm /etc/kubernetes/manifests/kube-apiserver.yaml
 sudo rm /etc/kubernetes/manifests/kube-controller-manager.yaml
 sudo rm /etc/kubernetes/manifests/etcd.yaml

@@ -7,7 +7,7 @@ prompt_type() {
             echo "This is a Master."
             echo ""
             sudo mkdir -p $HOME/.kube
-            sudo $HOME/.kube/config
+            sudo touch $HOME/.kube/config
             sudo touch /etc/kubernetes/admin.conf
             sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
             sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -74,13 +74,13 @@ rm -f crictl-$VERSION-linux-amd64.tar.gz
 VERSION="v1.28.0"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/critest-$VERSION-linux-amd64.tar.gz
 sudo tar zxvf critest-$VERSION-linux-amd64.tar.gz -C /usr/local/bin
-rm -f critest-$VERSION-linux-amd64.tar.gz
+sudo rm -f critest-$VERSION-linux-amd64.tar.gz
 
 sudo  apt-get -y install socat
 sudo swapoff -a  
 sudo sed -i '/ swap / s/^/#/' /etc/fstab
 
-systemctl list-units --type=swap --state=active
+sudo systemctl list-units --type=swap --state=active
 
 sudo systemctl enable kublet
 
