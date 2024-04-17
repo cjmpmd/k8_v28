@@ -62,9 +62,11 @@ net.bridge.bridge-nf-call-iptables = 1
 net.ipv4.ip_forward = 1
 EOT
 
-sudo sysctl --system
 
 sudo hostnamectl set-hostname master-node
+sudo hostnamectl set-hostname "k8smaster.example.net"
+exec bash
+sudo sysctl --system
 
 VERSION="v1.28.0"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
