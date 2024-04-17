@@ -1,3 +1,5 @@
+prompt_type
+
 sudo apt update -y
 $ sudo apt install net-tools -y
 
@@ -69,6 +71,11 @@ prompt_type() {
         [Mm]|[Mm])
             echo "This is a Master."
             echo ""
+            sudo mkdir -p $HOME/.kube
+            
+            sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+            sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
             sudo kubeadm config images pull
             #echo "sudo pkill kubelet"
             echo " sudo kubeadm init --control-plane-endpoint=master-node --upload-certs --ignore-preflight-errors=all"
@@ -86,7 +93,7 @@ prompt_type() {
 }
 
 # Prompt user for reboot confirmation
-prompt_type
+# prompt_type
 
 
 

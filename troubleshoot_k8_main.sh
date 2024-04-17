@@ -17,3 +17,5 @@ sudo systemctl daemon-reload
 sudo systemctl restart docker
 # sudo systemctl restart kubelet
 sudo systemctl daemon-reload && sudo systemctl restart docker
+
+#sudo chmod +x start_k8_main.sh && sudo chmod +x troubleshoot_k8_main.sh
