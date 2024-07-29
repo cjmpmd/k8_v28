@@ -7,7 +7,7 @@ prompt_type() {
             echo "This is a Master."
             echo ""
             sudo mkdir -p $HOME/.kube
-            sudo touch $HOME/.kube/config
+            # sudo touch $HOME/.kube/config
             sudo touch /etc/kubernetes/admin.conf
             sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
             sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -57,8 +57,7 @@ overlay
 br_netfilter
 EOF
 
-sudo modprobe overlay
-sudo modprobe br_netfilter
+sudo modprobe overlay && sudo modprobe br_netfilter
 
 sudo tee /etc/sysctl.d/kubernetes.conf <<EOT
 net.bridge.bridge-nf-call-ip6tables = 1
@@ -68,9 +67,41 @@ EOT
 
 
 # sudo hostnamectl set-hostname master-node
-sudo hostnamectl set-hostname "k8smaster.example.net"
+sudo hostnamectl set-hostname "k8smaster"
 # exec bash
 sudo sysctl --system
+
+sudo apt install -y curl gnupg2 software-properties-common apt-transport-https ca-certificates
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmour -o /etc/apt/trusted.gpg.d/docker.gpg
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt update -y
+
+sudo apt install containerd.io -y
+containerd config default | sudo tee /etc/containerd/config.toml > /dev/null 2>&1
+sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \=true/g' /etc/containerd/config.toml
+sudo systemctl restart containerd
+sudo systemctl enable containerd
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+# sudo apt-add-repository "deb http://apt.kubernetes.io/kubernetes-xenial main"
+
+curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+
+sudo apt install -y kubeadm=1.28.1-1.1 
+sudo apt install -y kubelet=1.28.1-1.1
+sudo apt install -y kubectl=1.28.1-1.1
+
+sudo apt-get install -y socat conntrack
+
+
+
+
+
+
 
 VERSION="v1.28.0"
 wget https://github.com/kubernetes-sigs/cri-tools/releases/download/$VERSION/crictl-$VERSION-linux-amd64.tar.gz
@@ -97,6 +128,13 @@ sudo systemctl restart kubelet
 
 # sudo apt-get install -y kubelet kubeadm kubectl
 # sudo apt-mark hold kubelet kubeadm kubectl
+
+
+
+sudo mkdir -p /etc/containerd
+sudo containerd config default | sudo tee /etc/containerd/config.toml
+sudo systemctl restart containerd
+
 
 sudo kubeadm config images pull
 sudo apt update -y
